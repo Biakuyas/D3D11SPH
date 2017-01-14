@@ -1,0 +1,97 @@
+﻿生成启动时间为 2017/1/14 16:05:15。
+     1>项目“F:\VS2012pro\D3D11SPH\D3D11SPH\D3D11SPH.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         G:\VS2012\VC\bin\CL.exe /c /IG:\FBX\2016.1.2\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MDd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt SPH_System.cpp
+         SPH_System.cpp
+     1>g:\direct\include\dxgitype.h(12): warning C4005: “DXGI_STATUS_OCCLUDED”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49449) : 参见“DXGI_STATUS_OCCLUDED”的前一个定义
+     1>g:\direct\include\dxgitype.h(13): warning C4005: “DXGI_STATUS_CLIPPED”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49458) : 参见“DXGI_STATUS_CLIPPED”的前一个定义
+     1>g:\direct\include\dxgitype.h(14): warning C4005: “DXGI_STATUS_NO_REDIRECTION”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49467) : 参见“DXGI_STATUS_NO_REDIRECTION”的前一个定义
+     1>g:\direct\include\dxgitype.h(15): warning C4005: “DXGI_STATUS_NO_DESKTOP_ACCESS”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49476) : 参见“DXGI_STATUS_NO_DESKTOP_ACCESS”的前一个定义
+     1>g:\direct\include\dxgitype.h(16): warning C4005: “DXGI_STATUS_GRAPHICS_VIDPN_SOURCE_IN_USE”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49485) : 参见“DXGI_STATUS_GRAPHICS_VIDPN_SOURCE_IN_USE”的前一个定义
+     1>g:\direct\include\dxgitype.h(17): warning C4005: “DXGI_STATUS_MODE_CHANGED”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49494) : 参见“DXGI_STATUS_MODE_CHANGED”的前一个定义
+     1>g:\direct\include\dxgitype.h(18): warning C4005: “DXGI_STATUS_MODE_CHANGE_IN_PROGRESS”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49503) : 参见“DXGI_STATUS_MODE_CHANGE_IN_PROGRESS”的前一个定义
+     1>g:\direct\include\dxgitype.h(21): warning C4005: “DXGI_ERROR_INVALID_CALL”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49518) : 参见“DXGI_ERROR_INVALID_CALL”的前一个定义
+     1>g:\direct\include\dxgitype.h(22): warning C4005: “DXGI_ERROR_NOT_FOUND”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49527) : 参见“DXGI_ERROR_NOT_FOUND”的前一个定义
+     1>g:\direct\include\dxgitype.h(23): warning C4005: “DXGI_ERROR_MORE_DATA”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49536) : 参见“DXGI_ERROR_MORE_DATA”的前一个定义
+     1>g:\direct\include\dxgitype.h(24): warning C4005: “DXGI_ERROR_UNSUPPORTED”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49545) : 参见“DXGI_ERROR_UNSUPPORTED”的前一个定义
+     1>g:\direct\include\dxgitype.h(25): warning C4005: “DXGI_ERROR_DEVICE_REMOVED”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49554) : 参见“DXGI_ERROR_DEVICE_REMOVED”的前一个定义
+     1>g:\direct\include\dxgitype.h(26): warning C4005: “DXGI_ERROR_DEVICE_HUNG”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49563) : 参见“DXGI_ERROR_DEVICE_HUNG”的前一个定义
+     1>g:\direct\include\dxgitype.h(27): warning C4005: “DXGI_ERROR_DEVICE_RESET”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49573) : 参见“DXGI_ERROR_DEVICE_RESET”的前一个定义
+     1>g:\direct\include\dxgitype.h(28): warning C4005: “DXGI_ERROR_WAS_STILL_DRAWING”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49582) : 参见“DXGI_ERROR_WAS_STILL_DRAWING”的前一个定义
+     1>g:\direct\include\dxgitype.h(29): warning C4005: “DXGI_ERROR_FRAME_STATISTICS_DISJOINT”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49592) : 参见“DXGI_ERROR_FRAME_STATISTICS_DISJOINT”的前一个定义
+     1>g:\direct\include\dxgitype.h(30): warning C4005: “DXGI_ERROR_GRAPHICS_VIDPN_SOURCE_IN_USE”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49601) : 参见“DXGI_ERROR_GRAPHICS_VIDPN_SOURCE_IN_USE”的前一个定义
+     1>g:\direct\include\dxgitype.h(31): warning C4005: “DXGI_ERROR_DRIVER_INTERNAL_ERROR”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49611) : 参见“DXGI_ERROR_DRIVER_INTERNAL_ERROR”的前一个定义
+     1>g:\direct\include\dxgitype.h(32): warning C4005: “DXGI_ERROR_NONEXCLUSIVE”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49620) : 参见“DXGI_ERROR_NONEXCLUSIVE”的前一个定义
+     1>g:\direct\include\dxgitype.h(33): warning C4005: “DXGI_ERROR_NOT_CURRENTLY_AVAILABLE”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49629) : 参见“DXGI_ERROR_NOT_CURRENTLY_AVAILABLE”的前一个定义
+     1>g:\direct\include\dxgitype.h(34): warning C4005: “DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49639) : 参见“DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED”的前一个定义
+     1>g:\direct\include\dxgitype.h(35): warning C4005: “DXGI_ERROR_REMOTE_OUTOFMEMORY”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49648) : 参见“DXGI_ERROR_REMOTE_OUTOFMEMORY”的前一个定义
+     1>G:\Direct\Include\D3D11.h(917): warning C4005: “D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49817) : 参见“D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS”的前一个定义
+     1>G:\Direct\Include\D3D11.h(918): warning C4005: “D3D11_ERROR_FILE_NOT_FOUND”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49826) : 参见“D3D11_ERROR_FILE_NOT_FOUND”的前一个定义
+     1>G:\Direct\Include\D3D11.h(919): warning C4005: “D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49836) : 参见“D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS”的前一个定义
+     1>G:\Direct\Include\D3D11.h(920): warning C4005: “D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49845) : 参见“D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD”的前一个定义
+     1>g:\direct\include\d3d10.h(608): warning C4005: “D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49793) : 参见“D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS”的前一个定义
+     1>g:\direct\include\d3d10.h(609): warning C4005: “D3D10_ERROR_FILE_NOT_FOUND”: 宏重定义
+                 C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49802) : 参见“D3D10_ERROR_FILE_NOT_FOUND”的前一个定义
+       Link:
+         G:\VS2012\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.exe" /INCREMENTAL:NO /NOLOGO d3d11.lib d3dx11d.lib D3DCompiler.lib Effects11d.lib dxerr.lib dxgi.lib dxguid.lib "libfbxsdk-md.lib" "CEGUIBase-0_d.lib" "CEGUIDirect3D9Renderer-0_d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.lib" /MACHINE:X86 /SAFESEH Release\FXControl.obj
+         Release\main.obj
+         Release\MyD3D11app.obj
+         Release\Particle.obj
+         Release\RenderObject.obj
+         Release\SPH_System.obj
+         Release\StateControl.obj
+         Release\VertexIndexControl.obj
+     1>Effects11d.lib(EffectAPI.obj) : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/OPT:ICF”规范)
+         正在生成代码
+     1>f:\vs2012pro\d3d11sph\d3d11sph\myd3d11app.cpp(189): warning C4715: “MyD3D11app::Resize”: 不是所有的控件路径都返回值
+     1>f:\vs2012pro\d3d11sph\d3d11sph\fxcontrol.cpp(57): warning C4715: “FXControl::Init”: 不是所有的控件路径都返回值
+     1>f:\vs2012pro\d3d11sph\d3d11sph\renderobject.cpp(189): warning C4715: “RenderObject::Resize”: 不是所有的控件路径都返回值
+         已完成代码的生成
+     1>Effects11d.lib(d3dx11dbg.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(d3dx11dbg.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+     1>Effects11d.lib(d3dxGlobal.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(d3dxGlobal.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+     1>Effects11d.lib(EffectAPI.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(EffectAPI.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+     1>Effects11d.lib(EffectLoad.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(EffectLoad.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+     1>Effects11d.lib(EffectNonRuntime.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(EffectNonRuntime.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+     1>Effects11d.lib(EffectReflection.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(EffectReflection.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+     1>Effects11d.lib(EffectRuntime.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(EffectRuntime.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+         D3D11SPH.vcxproj -> F:\VS2012pro\D3D11SPH\Release\D3D11SPH.exe
+       PostBuildEvent:
+         copy "E:\ce\cegui-0.8.5\bin\CEGUIDirect3D9Renderer-0_d.dll" "F:\VS2012pro\D3D11SPH\Release\\"
+         copy "E:\ce\cegui-0.8.5\bin\CEGUIBase-0_d.dll" "F:\VS2012pro\D3D11SPH\Release\\"
+         copy "E:\ce\cegui-0.8.5\bin\freetype_d.dll" "F:\VS2012pro\D3D11SPH\Release\\"
+         :VCEnd
+         已复制         1 个文件。
+         已复制         1 个文件。
+         已复制         1 个文件。
+     1>已完成生成项目“F:\VS2012pro\D3D11SPH\D3D11SPH\D3D11SPH.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:02.31
