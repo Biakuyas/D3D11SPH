@@ -1,9 +1,12 @@
 #include "RenderObject.h"
-
+#include<Errors.h>
+#include<Strsafe.h>
+#include<comdef.h>
 HRESULT RenderObject::ObjectInit()
 {
 	//VertexIndexInit();
-
+	//m_RenderState = eBillPartilce;
+	m_framecount = 0;
 	VertexIndexControl::VertexIndexInit(m_pd3dDevice);
 
 	HRESULT hr;
@@ -22,7 +25,13 @@ HRESULT RenderObject::ObjectInit()
 	if(FAILED(hr))
 		return E_FAIL;
 
-
+	hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,L"Textures/LobbyCube.dds",0,0,&m_CubeMapSRV,0);
+	//LobbyCube.dds
+	if(FAILED(hr))
+	{
+		MessageBoxA(0,"Load Texture Failed",0,0);
+		return E_FAIL;
+	} 
 	// Read Texture From File
 	 hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,L"Textures/brick01.dds",0,0,&m_d3d11SRVFloor,0);
 
@@ -49,7 +58,32 @@ HRESULT RenderObject::ObjectInit()
 		return E_FAIL;
 	}
 
-	m_SPHSystem.SPH_Init();
+	hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,L"Textures/water.png",0,0,&m_d3d11SRVWater,0);
+
+	if(FAILED(hr))
+	{
+		MessageBoxA(0,"Load Texture Failed",0,0);
+		return E_FAIL;
+	}
+
+	
+
+	//Init SPHSystem
+	m_SPHSystem.SPH_CreateParticlePool();
+	//Init Grids
+	SPHBox girdspace(-spacerange,-spacerange,-spacerange,spacerange, spacerange,spacerange);
+	m_grids.InitGrid(girdspace,m_SPHSystem.SmoothRadius());
+
+
+// 	SPHBox cubespace(-cuberange,-cuberange,-cuberange,cuberange,2 * cuberange,cuberange);
+// 	m_MarchingCube.SetMarchingCube(cubespace,DefalutCubeSize);
+	m_MarchingCube.Init();
+
+
+	SPH_UIControl::Init(m_pd3dDevice,m_pd3dDevContext,m_SPHSystem,m_MarchingCube);
+
+
+	VertexIndexControl::SPHWallInit(m_pd3dDevice,m_SPHSystem);
 
 	return S_OK;
 
@@ -90,7 +124,7 @@ RenderObject::RenderObject():MyD3D11app()
 	m_v3Rotation = XMFLOAT3(0,0,0);
 	m_v3Scailing = XMFLOAT3(1,1,1);
 
-	m_vLightPos = XMFLOAT3(-2.5,10,-2.5);
+	m_vLightPos = XMFLOAT3(0,100,-10);
 
 	m_v3WorldCoordinate_Skull = XMFLOAT3(0,0,-4);
 	m_v3Rotation_Skull = XMFLOAT3(0,90,0);
@@ -173,10 +207,26 @@ void RenderObject::UpdateScene(const float dt)
 	FXControl::m_fxEyePos->SetRawValue((float*)&EyePos,0,sizeof(XMFLOAT3));
 	FXControl::m_fxLightDir->SetRawValue((float*)&LightDirection,0,sizeof(LightDirection));
 
-	m_SPHSystem.SPH_DensityPressure();
+
+
+	m_grids.InsertParticles(m_SPHSystem);
+
+	m_SPHSystem.SPH_DensityPressure(m_grids);
 	m_SPHSystem.SPH_AccelerationFigure();
 	m_SPHSystem.SPH_ParticleUpdate(dt);
 
+
+	if(eMarchingCube == m_SPHSystem.SPHRenderState() || eRender ==m_SPHSystem.SPHRenderState())
+	{
+	m_MarchingCube.GridValueFigure(m_grids,m_SPHSystem);
+	m_MarchingCube.Polygonise(m_grids,m_MarchingCube.Thresholdvalue(),m_SPHSystem);
+	}
+
+	FrameCount(dt);
+    SPH_UIControl::Update(m_framecount);
+
+	float fskybox = SkyBoxRange;
+	FXControl::m_fxSkyBoxRange->SetRawValue(&fskybox,0,sizeof(float));
 
 }
 
@@ -205,19 +255,68 @@ void RenderObject::DrawScene()
 	D3DX11_TECHNIQUE_DESC techDesc;
 	FXControl::m_fxTech->GetDesc(&techDesc);
 
+	D3DX11_TECHNIQUE_DESC billtechDesc;
+	FXControl::m_fxBillBoardTech->GetDesc(&billtechDesc);
+
+	D3DX11_TECHNIQUE_DESC skytechDesc;
+	FXControl::m_fxSkyBox->GetDesc(&skytechDesc);
+
+	D3DX11_TECHNIQUE_DESC WireFrametechDesc;
+	FXControl::m_fxWireFrame->GetDesc(&WireFrametechDesc);
 
 //Different Object Render
 // Set Buffer
-	m_pd3dDevContext->IASetVertexBuffers(0,1,&VertexIndexControl::m_VB,&iVertexStrides,&ioffset);
-	//m_pd3dDevContext->IASetIndexBuffer(VertexIndexControl::m_IB,DXGI_FORMAT_R32_UINT,0);
-	// Render 500 Particle
-	for(int i = 0;i < m_SPHSystem.m_iParticleCount; i++)
+
+	if(eBillPartilce == m_SPHSystem.SPHRenderState() || eParticle == m_SPHSystem.SPHRenderState())
 	{
-		//Set State
-		m_pd3dDevContext->RSSetState(StateControl::m_BackCullRs);
+		m_pd3dDevContext->IASetVertexBuffers(0,1,&VertexIndexControl::m_VB,&iVertexStrides,&ioffset);
+		//m_pd3dDevContext->IASetIndexBuffer(VertexIndexControl::m_IB,DXGI_FORMAT_R32_UINT,0);
+		// Render 500 Particle
+		m_pd3dDevContext->OMSetBlendState(StateControl::m_TransparentBS,fBlendFactors,0xffffffff);
+
+		for(int i = 0;i < m_SPHSystem.m_iParticleCount; i++)
+		{
+			//Set State
+			m_pd3dDevContext->RSSetState(StateControl::m_NoBackSolid);
+			//Set Matrix
+			m_matWorld = XMMatrixTranslation(m_SPHSystem.m_ParticlePool[i].m_vPosRender.x,m_SPHSystem.m_ParticlePool[i].m_vPosRender.y,m_SPHSystem.m_ParticlePool[i].m_vPosRender.z);
+			matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
+			m_matWorldViewProj = m_matWorld * m_matView * m_matProj;
+			//Set FX Variable
+			FXControl::m_fxMatWorldViewProj->SetMatrix((float*)&m_matWorldViewProj);
+			FXControl::m_fxMatWorld->SetMatrix((float*)&m_matWorld);
+			FXControl::m_fxMatWorldInverseTranspose->SetMatrix((float*)&matWorldInverseTranspose);
+
+			//Particle
+			//Set Texture
+			FXControl::m_fxDiffuseMap->SetResource(m_d3d11SRVWater);
+
+			if( eParticle == m_SPHSystem.SPHRenderState())
+				for(int p = 0; p < WireFrametechDesc.Passes; p++ )
+				{
+					m_pd3dDevContext->OMSetBlendState(0,fBlendFactors,0xffffffff);
+					FXControl::m_fxWireFrame->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+					m_pd3dDevContext->Draw(1,0);
+				}
+
+				if(eBillPartilce == m_SPHSystem.SPHRenderState())
+					for(int p = 0; p < billtechDesc.Passes; p++ )
+					{
+						FXControl::m_fxBillBoardTech->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+						m_pd3dDevContext->Draw(1,0);
+					}
+		}
+		m_pd3dDevContext->OMSetBlendState(0,fBlendFactors,0xffffffff);
+	}
+	//draw box
+	m_pd3dDevContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	m_pd3dDevContext->IASetVertexBuffers(0,1,&VertexIndexControl::m_VBLimitedBox,&iVertexStrides,&ioffset);
+	m_pd3dDevContext->IASetIndexBuffer(VertexIndexControl::m_IBLimitedBox,DXGI_FORMAT_R32_UINT,0);
+	//Set State
+	m_pd3dDevContext->RSSetState(StateControl::m_NoBackWireFrame);
 		//Set Matrix
-		//matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
-		m_matWorld = XMMatrixTranslation(m_SPHSystem.m_ParticlePool[i].m_vPosRender.x,m_SPHSystem.m_ParticlePool[i].m_vPosRender.y,m_SPHSystem.m_ParticlePool[i].m_vPosRender.z);
+		m_matWorld = XMMatrixTranslation(0,0,0);
+		matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
 		m_matWorldViewProj = m_matWorld * m_matView * m_matProj;
 		//Set FX Variable
 		FXControl::m_fxMatWorldViewProj->SetMatrix((float*)&m_matWorldViewProj);
@@ -230,10 +329,223 @@ void RenderObject::DrawScene()
 		for(int p = 0; p < techDesc.Passes; p++ )
 		{
 			FXControl::m_fxTech->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
-			m_pd3dDevContext->Draw(1,i);
+			m_pd3dDevContext->DrawIndexed(VertexIndexControl::m_iIndexCount,0,0);
+		}
+	//drawbarrier
+		if(m_SPHSystem.BarrierActive())
+		{
+			//draw box
+			m_pd3dDevContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+			m_pd3dDevContext->IASetVertexBuffers(0,1,&VertexIndexControl::m_VBBarrier,&iVertexStrides,&ioffset);
+			m_pd3dDevContext->IASetIndexBuffer(VertexIndexControl::m_IBBarrier,DXGI_FORMAT_R32_UINT,0);
+			//Set State
+			m_pd3dDevContext->RSSetState(StateControl::m_NoBackWireFrame);
+			//Set Matrix
+			//matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
+			m_matWorld = XMMatrixTranslation(0,0,0);
+			m_matWorldViewProj = m_matWorld * m_matView * m_matProj;
+			//Set FX Variable
+			FXControl::m_fxMatWorldViewProj->SetMatrix((float*)&m_matWorldViewProj);
+			FXControl::m_fxMatWorld->SetMatrix((float*)&m_matWorld);
+			FXControl::m_fxMatWorldInverseTranspose->SetMatrix((float*)&matWorldInverseTranspose);
+
+			for(int p = 0; p < techDesc.Passes; p++ )
+			{
+				FXControl::m_fxTech->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+				m_pd3dDevContext->DrawIndexed(VertexIndexControl::m_iIndexCount,0,0);
+			}
+		}
+/*	m_pd3dDevContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_pd3dDevContext->IASetVertexBuffers(0,1,&VertexIndexControl::m_VBox,&iVertexStrides,&ioffset);
+	m_pd3dDevContext->IASetIndexBuffer(VertexIndexControl::m_IB,DXGI_FORMAT_R32_UINT,0);
+	//Set State
+	m_pd3dDevContext->RSSetState(StateControl::m_BackCullRs);
+
+	for(int m = 0; m < m_MarchingCube.m_testindexList.size(); m++)
+	{
+		XMFLOAT3 temppos = m_MarchingCube.figureCellPos(m_MarchingCube.m_testindexList[m]);
+		temppos.x /= m_SPHSystem.UnitScale();
+		temppos.y /= m_SPHSystem.UnitScale();
+		temppos.z /= m_SPHSystem.UnitScale();
+		//Set Matrix
+		//matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
+		m_matWorld = XMMatrixTranslation(temppos.x,temppos.y,temppos.z);
+		m_matWorldViewProj = m_matWorld * m_matView * m_matProj;
+		//Set FX Variable
+		FXControl::m_fxMatWorldViewProj->SetMatrix((float*)&m_matWorldViewProj);
+		FXControl::m_fxMatWorld->SetMatrix((float*)&m_matWorld);
+		FXControl::m_fxMatWorldInverseTranspose->SetMatrix((float*)&matWorldInverseTranspose);
+
+		//Particle
+		//Set Texture
+		//FXControl::m_fxDiffuseMap->SetResource(m_d3d11SRVFloor);
+		for(int p = 0; p < techDesc.Passes; p++ )
+		{
+			FXControl::m_fxTech->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+			m_pd3dDevContext->DrawIndexed(VertexIndexControl::m_iIndexCount,0,0);
 		}
 	}
+	*/
+	//CreateTriangleBuffer();
 
+	if(eRender == m_SPHSystem.SPHRenderState())
+	{
+		//draw SkyBox
+		m_pd3dDevContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_pd3dDevContext->IASetVertexBuffers(0,1,&VertexIndexControl::m_VBSkyBox,&iVertexStrides,&ioffset);
+		m_pd3dDevContext->IASetIndexBuffer(VertexIndexControl::m_IBSkyBox,DXGI_FORMAT_R32_UINT,0);
+		//Set State
+		m_pd3dDevContext->RSSetState(StateControl::m_NoBackSolid);
+		//Set Matrix
+		m_matWorld = XMMatrixTranslation(0,0,0);
+		matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
+		m_matWorldViewProj = m_matWorld * m_matView * m_matProj;
+		//Set FX Variable
+		FXControl::m_fxMatWorldViewProj->SetMatrix((float*)&m_matWorldViewProj);
+		FXControl::m_fxMatWorld->SetMatrix((float*)&m_matWorld);
+		FXControl::m_fxMatWorldInverseTranspose->SetMatrix((float*)&matWorldInverseTranspose);
+
+		//Particle
+		//Set Texture
+		//FXControl::m_fxDiffuseMap->SetResource(m_d3d11SRVFloor);
+		for(int p = 0; p < skytechDesc.Passes; p++ )
+		{
+			FXControl::m_fxSkyBox->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+			m_pd3dDevContext->DrawIndexed(36,0,0);
+		}
+
+
+	/*	//draw TestBox
+		m_pd3dDevContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_pd3dDevContext->IASetVertexBuffers(0,1,&VertexIndexControl::m_VBTestBox,&iVertexStrides,&ioffset);
+		m_pd3dDevContext->IASetIndexBuffer(VertexIndexControl::m_IBSkyBox,DXGI_FORMAT_R32_UINT,0);
+		//Set State
+		m_pd3dDevContext->RSSetState(StateControl::m_NoBackSolid);
+		//Set Matrix
+		m_matWorld = XMMatrixTranslation(0,0,0);
+		matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
+		m_matWorldViewProj = m_matWorld * m_matView * m_matProj;
+		//Set FX Variable
+		FXControl::m_fxMatWorldViewProj->SetMatrix((float*)&m_matWorldViewProj);
+		FXControl::m_fxMatWorld->SetMatrix((float*)&m_matWorld);
+		FXControl::m_fxMatWorldInverseTranspose->SetMatrix((float*)&matWorldInverseTranspose);
+
+		//Particle
+		//Set Texture
+		//FXControl::m_fxDiffuseMap->SetResource(m_d3d11SRVFloor);
+		for(int p = 0; p < techDesc.Passes; p++ )
+		{
+			FXControl::m_fxTech->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+			m_pd3dDevContext->DrawIndexed(36,0,0);
+		}*/
+	}
+
+	if(eMarchingCube == m_SPHSystem.SPHRenderState() || eRender == m_SPHSystem.SPHRenderState())
+	{
+		ID3D11Buffer * m_VB;
+
+		Vertex* v = new Vertex[m_MarchingCube.m_trianglePos.size() * 3]; 
+
+		for(int i = 0; i < m_MarchingCube.m_trianglePos.size(); i++)
+		{
+
+			Vertex vertex1;
+			Vertex vertex2;
+			Vertex vertex3;
+			if(eMarchingCube == m_SPHSystem.SPHRenderState())
+			{
+				vertex1 = Vertex(m_MarchingCube.m_trianglePos[i].v1.x,m_MarchingCube.m_trianglePos[i].v1.y,m_MarchingCube.m_trianglePos[i].v1.z,0,0,0,0,0,0,0);
+				vertex2 = Vertex(m_MarchingCube.m_trianglePos[i].v2.x,m_MarchingCube.m_trianglePos[i].v2.y,m_MarchingCube.m_trianglePos[i].v2.z,0,0,0,0,0,0,0);
+				vertex3 = Vertex(m_MarchingCube.m_trianglePos[i].v3.x,m_MarchingCube.m_trianglePos[i].v3.y,m_MarchingCube.m_trianglePos[i].v3.z,0,0,0,0,0,0,0);
+			}
+			if(eRender == m_SPHSystem.SPHRenderState())
+			{
+		    	float n1x = m_MarchingCube.m_trianglePos[i].n1.x;
+		    	float n1y = m_MarchingCube.m_trianglePos[i].n1.y;
+				float n1z = m_MarchingCube.m_trianglePos[i].n1.z;
+				float n2x = m_MarchingCube.m_trianglePos[i].n2.x;
+				float n2y = m_MarchingCube.m_trianglePos[i].n2.y;
+				float n2z = m_MarchingCube.m_trianglePos[i].n2.z;
+				float n3x = m_MarchingCube.m_trianglePos[i].n3.x;
+				float n3y = m_MarchingCube.m_trianglePos[i].n3.y;
+				float n3z = m_MarchingCube.m_trianglePos[i].n3.z;
+
+				vertex1 = Vertex(m_MarchingCube.m_trianglePos[i].v1.x,m_MarchingCube.m_trianglePos[i].v1.y,m_MarchingCube.m_trianglePos[i].v1.z,n1x,n1y,n1z,0,0,0,0);
+				vertex2 = Vertex(m_MarchingCube.m_trianglePos[i].v2.x,m_MarchingCube.m_trianglePos[i].v2.y,m_MarchingCube.m_trianglePos[i].v2.z,n2x,n2y,n2z,0,0,0,0);
+				vertex3 = Vertex(m_MarchingCube.m_trianglePos[i].v3.x,m_MarchingCube.m_trianglePos[i].v3.y,m_MarchingCube.m_trianglePos[i].v3.z,n3x,n3y,n3z,0,0,0,0);
+			}
+
+			v[3 * i] = vertex1;
+			v[3 * i + 1] = vertex2;
+			v[3 * i + 2] = vertex3;
+		}
+
+		D3D11_BUFFER_DESC mVertexBufferDesc;
+		mVertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		mVertexBufferDesc.MiscFlags = 0;
+		mVertexBufferDesc.CPUAccessFlags = 0;
+		mVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		mVertexBufferDesc.ByteWidth = sizeof(Vertex) * m_MarchingCube.m_trianglePos.size() * 3;
+		mVertexBufferDesc.StructureByteStride = 0;
+
+
+		D3D11_SUBRESOURCE_DATA mVertexSubReData;
+		mVertexSubReData.pSysMem = v;
+
+		m_pd3dDevice->CreateBuffer(&mVertexBufferDesc,&mVertexSubReData,&m_VB);
+
+
+
+		m_pd3dDevContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_pd3dDevContext->IASetVertexBuffers(0,1,&m_VB,&iVertexStrides,&ioffset);
+		//Set State
+		m_pd3dDevContext->OMSetBlendState(StateControl::m_TransparentBS,fBlendFactors,0xffffffff);
+
+		if(eMarchingCube == m_SPHSystem.SPHRenderState())
+		m_pd3dDevContext->RSSetState(StateControl::m_NoBackWireFrame);
+
+		if(eRender == m_SPHSystem.SPHRenderState())
+		m_pd3dDevContext->RSSetState(StateControl::m_NoBackSolid);
+
+		//Set Matrix
+		FXControl::m_CubeMap->SetResource(m_CubeMapSRV);
+		m_matWorld = XMMatrixTranslation(0,0,0);
+		matWorldInverseTranspose = MatrixInverseTranspose(m_matWorld);
+		m_matWorldViewProj = m_matWorld * m_matView * m_matProj;
+		//Set FX Variable
+		FXControl::m_fxMatWorldViewProj->SetMatrix((float*)&m_matWorldViewProj);
+		FXControl::m_fxMatWorld->SetMatrix((float*)&m_matWorld);
+		FXControl::m_fxMatWorldInverseTranspose->SetMatrix((float*)&matWorldInverseTranspose);
+
+		//Particle
+		//Set Texture
+		//FXControl::m_fxDiffuseMap->SetResource(m_d3d11SRVFloor);
+
+		if(eRender == m_SPHSystem.SPHRenderState())
+		{
+			 for(int p = 0; p < techDesc.Passes; p++ )
+			 {
+				FXControl::m_fxTech->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+				m_pd3dDevContext->Draw(m_MarchingCube.m_trianglePos.size() * 3,0);
+			 }
+
+		}
+		if(eMarchingCube == m_SPHSystem.SPHRenderState())
+		{
+			for(int p = 0; p < techDesc.Passes; p++ )
+			{
+				FXControl::m_fxWireFrame->GetPassByIndex(p)->Apply(0,m_pd3dDevContext);
+				m_pd3dDevContext->Draw(m_MarchingCube.m_trianglePos.size() * 3,0);
+			}
+		}
+		m_pd3dDevContext->OMSetBlendState(0,fBlendFactors,0xffffffff);
+		delete [] v;
+
+		RELEASE_COM(m_VB);
+	}
+	
+
+	SPH_UIControl::Render();
 	/*//Wall
 	//Set Texture
 	FXControl::m_fxDiffuseMap->SetResource(m_d3d11SRVWall);
@@ -373,11 +685,24 @@ void RenderObject::DrawScene()
 	m_pd3dDevContext->OMSetBlendState(0,fBlendFactors,0xffffffff);
 	m_pd3dDevContext->OMSetDepthStencilState(0,0);
 
-	HRESULT hr = m_pSwapChain->Present(0,0);
+	HRESULT hr = m_pSwapChain->Present(0,0); //错误原因应该是内存泄露，检查一下顶点分配问题
 
 	if(FAILED(hr))
 	{
-		MessageBoxA(0,"Fail to Swap Chain",0,0);
+		//0x887a0005
+		//MessageBoxA(0,"Fail to Swap Chain",0,0);
+		_com_error err(hr);
+		LPCTSTR errMsg = err.ErrorMessage();
+
+// 		TCHAR errorinfo[MAX_ERROR_TEXT_LEN];
+// 
+// 		DWORD res = AMGetErrorText(hr,errorinfo,MAX_ERROR_TEXT_LEN);
+// 		if (res == 0)
+// 		{
+// 			StringCchPrintf(errorinfo, MAX_ERROR_TEXT_LEN, L"Unknown Error: 0x%2x", hr);
+// 		}
+		
+		MessageBox(0,errMsg,0,0);
 	}
 }
 
@@ -393,7 +718,43 @@ void RenderObject::KeyDown(WPARAM wParam)
 		m_v3WorldCoordinate.x -= 0.05;
 
 	if(wParam == 'K')
-		m_SPHSystem.SPH_Init();
+	{
+		m_SPHSystem.SPH_Reset();
+		m_SPHSystem.SPH_CreateParticlePool();
+		m_MarchingCube.Reset();
+	}
+
+	if(wParam == 'B')
+	{
+		m_SPHSystem.SPHRenderState(eParticle);
+		m_MarchingCube.IsRender(false);
+
+		SPH_UIControl::setRenderModeBoxState(eParticle);
+	}
+
+	if(wParam == 'N')
+	{
+		m_SPHSystem.SPHRenderState(eBillPartilce);
+		m_MarchingCube.IsRender(false);
+
+		SPH_UIControl::setRenderModeBoxState(eBillPartilce);
+	}
+
+	if(wParam == 'M')
+	{
+		m_SPHSystem.SPHRenderState(eMarchingCube);
+		m_MarchingCube.IsRender(false);
+
+		SPH_UIControl::setRenderModeBoxState(eMarchingCube);
+	}
+
+	if(wParam == 'V')
+	{
+		m_SPHSystem.SPHRenderState(eRender);
+		m_MarchingCube.IsRender(true);
+
+		SPH_UIControl::setRenderModeBoxState(eRender);
+	}
 
 }
 
@@ -457,3 +818,58 @@ XMMATRIX RenderObject::MatrixInverseTranspose(XMMATRIX& matrix)
 
 	return XMMatrixTranspose(XMMatrixInverse(&det,matTemp));
 }
+
+void RenderObject::CreateTriangleBuffer()
+{
+// 	ID3D11Buffer * m_VB;
+// 
+// 	Vertex* v = new Vertex[m_MarchingCube.m_trianglePos.size() * 3]; 
+// 
+// 	for(int i = 0; i < m_MarchingCube.m_trianglePos.size(); i++)
+// 	{
+// 		Vertex vertex1(m_MarchingCube.m_trianglePos[i].v1.x,m_MarchingCube.m_trianglePos[i].v1.y,m_MarchingCube.m_trianglePos[i].v1.z,0,0,0,0);
+// 		Vertex vertex2(m_MarchingCube.m_trianglePos[i].v2.x,m_MarchingCube.m_trianglePos[i].v2.y,m_MarchingCube.m_trianglePos[i].v2.z,0,0,0,0);
+// 		Vertex vertex3(m_MarchingCube.m_trianglePos[i].v3.x,m_MarchingCube.m_trianglePos[i].v3.y,m_MarchingCube.m_trianglePos[i].v3.z,0,0,0,0);
+// 
+// 		v[3 * i] = vertex1;
+// 		v[3 * i + 1] = vertex2;
+// 		v[3 * i + 2] = vertex3;
+// 	}
+// 
+// 	D3D11_BUFFER_DESC mVertexBufferDesc;
+// 	mVertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+// 	mVertexBufferDesc.MiscFlags = 0;
+// 	mVertexBufferDesc.CPUAccessFlags = 0;
+// 	mVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+// 	mVertexBufferDesc.ByteWidth = sizeof(Vertex) * m_MarchingCube.m_trianglePos.size() * 3;
+// 	mVertexBufferDesc.StructureByteStride = 0;
+// 
+// 
+// 	D3D11_SUBRESOURCE_DATA mVertexSubReData;
+// 	mVertexSubReData.pSysMem = v;
+// 
+// 	m_pd3dDevice->CreateBuffer(&mVertexBufferDesc,&mVertexSubReData,&m_VB);
+// 
+// 	delete [] v;
+}
+
+void RenderObject::FrameCount(const float dt)
+{
+	static int count = 0;
+	static float time = 0;
+
+	time += dt;
+	count += 1;
+
+	if(time >= 1)
+	{
+		time = 0;
+		m_framecount = count;
+		count = 0;
+	}
+
+
+
+}
+
+

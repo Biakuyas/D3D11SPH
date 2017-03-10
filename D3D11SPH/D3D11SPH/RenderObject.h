@@ -5,10 +5,16 @@
 #include"VertexIndexControl.h"
 #include"StateControl.h"
 #include"SPH_System.h"
+#include"Grid.h"
+#include"SPH_MarchingCube.h"
+#include "SPH_UI.h"
+
 #include<vector>
 #include<fstream>
 #include<string>
 #define  PI 3.1415926f
+
+
 
 class RenderObject: public MyD3D11app{
 
@@ -26,6 +32,7 @@ private:
 	ID3D11ShaderResourceView * m_d3d11SRVFloor;
 	ID3D11ShaderResourceView * m_d3d11SRVWall;
 	ID3D11ShaderResourceView * m_d3d11SRVMirror;
+	ID3D11ShaderResourceView * m_d3d11SRVWater;
 
 	XMFLOAT3 m_vLightPos;
 
@@ -48,6 +55,10 @@ private:
 	XMMATRIX m_matWorldViewProj;
 
 	SPHSystem m_SPHSystem;
+	Grid m_grids;
+	MarchingCube m_MarchingCube;
+
+	
 
 	 float m_MousePosLastx;
 	 float m_MousePosLasty;
@@ -55,6 +66,12 @@ private:
 	 float m_Thea;
 	 float m_MousePosNowx;
 	 float m_MousePosNowy;
+
+	 void CreateTriangleBuffer();
+	 int m_framecount;
+	 void FrameCount(const float dt);
+
+	 ID3D11ShaderResourceView * m_CubeMapSRV;
 public:
 	RenderObject();
 	virtual ~RenderObject();

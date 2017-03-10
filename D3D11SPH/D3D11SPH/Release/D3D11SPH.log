@@ -1,8 +1,8 @@
-﻿生成启动时间为 2017/1/14 16:05:15。
+﻿生成启动时间为 2017/2/27 16:54:33。
      1>项目“F:\VS2012pro\D3D11SPH\D3D11SPH\D3D11SPH.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         G:\VS2012\VC\bin\CL.exe /c /IG:\FBX\2016.1.2\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MDd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt SPH_System.cpp
-         SPH_System.cpp
+         G:\VS2012\VC\bin\CL.exe /c /IG:\FBX\2016.1.2\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MDd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt RenderObject.cpp
+         RenderObject.cpp
      1>g:\direct\include\dxgitype.h(12): warning C4005: “DXGI_STATUS_OCCLUDED”: 宏重定义
                  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49449) : 参见“DXGI_STATUS_OCCLUDED”的前一个定义
      1>g:\direct\include\dxgitype.h(13): warning C4005: “DXGI_STATUS_CLIPPED”: 宏重定义
@@ -59,20 +59,40 @@
                  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49793) : 参见“D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS”的前一个定义
      1>g:\direct\include\d3d10.h(609): warning C4005: “D3D10_ERROR_FILE_NOT_FOUND”: 宏重定义
                  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\winerror.h(49802) : 参见“D3D10_ERROR_FILE_NOT_FOUND”的前一个定义
+         Macro definition of max detected - undefining
+         Macro definition of min detected - undefining
+     1>RenderObject.cpp(169): warning C4305: “=”: 从“double”到“float”截断
+     1>RenderObject.cpp(226): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+     1>RenderObject.cpp(295): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(303): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(329): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(352): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(411): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(449): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(526): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(535): warning C4018: “<”: 有符号/无符号不匹配
+     1>RenderObject.cpp(712): warning C4305: “+=”: 从“double”到“FLOAT”截断
+     1>RenderObject.cpp(714): warning C4305: “+=”: 从“double”到“FLOAT”截断
+     1>RenderObject.cpp(716): warning C4305: “-=”: 从“double”到“FLOAT”截断
+     1>RenderObject.cpp(718): warning C4305: “-=”: 从“double”到“FLOAT”截断
+     1>RenderObject.cpp(784): warning C4305: “=”: 从“double”到“float”截断
        Link:
-         G:\VS2012\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.exe" /INCREMENTAL:NO /NOLOGO d3d11.lib d3dx11d.lib D3DCompiler.lib Effects11d.lib dxerr.lib dxgi.lib dxguid.lib "libfbxsdk-md.lib" "CEGUIBase-0_d.lib" "CEGUIDirect3D9Renderer-0_d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.lib" /MACHINE:X86 /SAFESEH Release\FXControl.obj
+         G:\VS2012\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.exe" /INCREMENTAL:NO /NOLOGO d3d11.lib d3dx11d.lib D3DCompiler.lib Effects11d.lib dxerr.lib dxgi.lib dxguid.lib "libfbxsdk-md.lib" "CEGUIBase-0_d.lib" "CEGUIDirect3D9Renderer-0_d.lib" "CEGUIDirect3D11Renderer-0_d.lib" "CEGUIBase-0.lib" "CEGUIDirect3D11Renderer-0.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\VS2012pro\D3D11SPH\Release\D3D11SPH.lib" /MACHINE:X86 /SAFESEH Release\FXControl.obj
+         Release\Grid.obj
          Release\main.obj
          Release\MyD3D11app.obj
          Release\Particle.obj
          Release\RenderObject.obj
+         Release\SPH_MarchingCube.obj
          Release\SPH_System.obj
+         Release\SPH_UI.obj
          Release\StateControl.obj
          Release\VertexIndexControl.obj
      1>Effects11d.lib(EffectAPI.obj) : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/OPT:ICF”规范)
          正在生成代码
-     1>f:\vs2012pro\d3d11sph\d3d11sph\myd3d11app.cpp(189): warning C4715: “MyD3D11app::Resize”: 不是所有的控件路径都返回值
-     1>f:\vs2012pro\d3d11sph\d3d11sph\fxcontrol.cpp(57): warning C4715: “FXControl::Init”: 不是所有的控件路径都返回值
-     1>f:\vs2012pro\d3d11sph\d3d11sph\renderobject.cpp(189): warning C4715: “RenderObject::Resize”: 不是所有的控件路径都返回值
+     1>f:\vs2012pro\d3d11sph\d3d11sph\myd3d11app.cpp(230): warning C4715: “MyD3D11app::Resize”: 不是所有的控件路径都返回值
+     1>f:\vs2012pro\d3d11sph\d3d11sph\fxcontrol.cpp(62): warning C4715: “FXControl::Init”: 不是所有的控件路径都返回值
+     1>f:\vs2012pro\d3d11sph\d3d11sph\renderobject.cpp(239): warning C4715: “RenderObject::Resize”: 不是所有的控件路径都返回值
          已完成代码的生成
      1>Effects11d.lib(d3dx11dbg.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(d3dx11dbg.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
      1>Effects11d.lib(d3dxGlobal.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“Effects11d.lib(d3dxGlobal.obj)”或在“F:\VS2012pro\D3D11SPH\Release\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
@@ -94,4 +114,4 @@
 
 生成成功。
 
-已用时间 00:00:02.31
+已用时间 00:00:17.40

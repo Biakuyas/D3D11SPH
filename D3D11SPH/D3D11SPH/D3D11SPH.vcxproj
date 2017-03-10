@@ -77,20 +77,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FXControl.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyD3D11app.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="RenderObject.cpp" />
+    <ClCompile Include="SPH_MarchingCube.cpp" />
     <ClCompile Include="SPH_System.cpp" />
+    <ClCompile Include="SPH_UI.cpp" />
     <ClCompile Include="StateControl.cpp" />
     <ClCompile Include="VertexIndexControl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Control.h" />
     <ClInclude Include="FXControl.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="MyD3D11app.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="RenderObject.h" />
+    <ClInclude Include="SPH_MarchingCube.h" />
+    <ClInclude Include="SPH_Math.h" />
     <ClInclude Include="SPH_System.h" />
+    <ClInclude Include="SPH_UI.h" />
     <ClInclude Include="StateControl.h" />
     <ClInclude Include="VertexIndexControl.h" />
   </ItemGroup>

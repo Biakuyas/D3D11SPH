@@ -14,14 +14,15 @@ public:
 	void Release();
 
 	static ID3D11BlendState * m_TransparentBS;
-	static ID3D11BlendState * m_NoColorWriteBS;
+	//static ID3D11BlendState * m_NoColorWriteBS;
 
-	static ID3D11DepthStencilState * m_DSSMirror;
-	static ID3D11DepthStencilState * m_DSSSkullReflection;
-	static ID3D11DepthStencilState * m_DSSShadow;
+// 	static ID3D11DepthStencilState * m_DSSMirror;
+// 	static ID3D11DepthStencilState * m_DSSSkullReflection;
+// 	static ID3D11DepthStencilState * m_DSSShadow;
 
-	static ID3D11RasterizerState *m_BackCullRs;
-	static ID3D11RasterizerState *m_BackCullRsClockWise;
+	static ID3D11RasterizerState *m_NoBackSolid;
+//	static ID3D11RasterizerState *m_BackCullRsClockWise;
+	static ID3D11RasterizerState *m_NoBackWireFrame;
 };
 
 

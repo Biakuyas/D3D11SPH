@@ -13,59 +13,89 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\D3D11Render">
+      <UniqueIdentifier>{8db9714f-7e80-41a8-9912-f06c389738b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\SPH">
+      <UniqueIdentifier>{babff571-78a8-4496-b448-c341fe1300ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FXControl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MyD3D11app.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderObject.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="StateControl.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="FXControl.cpp">
+      <Filter>源文件\D3D11Render</Filter>
     </ClCompile>
     <ClCompile Include="VertexIndexControl.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\D3D11Render</Filter>
+    </ClCompile>
+    <ClCompile Include="StateControl.cpp">
+      <Filter>源文件\D3D11Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MyD3D11app.cpp">
+      <Filter>源文件\D3D11Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject.cpp">
+      <Filter>源文件\D3D11Render</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\SPH</Filter>
     </ClCompile>
     <ClCompile Include="SPH_System.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\SPH</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>源文件\SPH</Filter>
+    </ClCompile>
+    <ClCompile Include="SPH_MarchingCube.cpp">
+      <Filter>源文件\SPH</Filter>
+    </ClCompile>
+    <ClCompile Include="SPH_UI.cpp">
+      <Filter>源文件\SPH</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FXControl.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="MyD3D11app.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderObject.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="StateControl.h">
-      <Filter>源文件</Filter>
+      <Filter>源文件\D3D11Render</Filter>
     </ClInclude>
     <ClInclude Include="VertexIndexControl.h">
-      <Filter>源文件</Filter>
+      <Filter>源文件\D3D11Render</Filter>
+    </ClInclude>
+    <ClInclude Include="StateControl.h">
+      <Filter>源文件\D3D11Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MyD3D11app.h">
+      <Filter>源文件\D3D11Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>源文件\D3D11Render</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
-      <Filter>源文件</Filter>
+      <Filter>源文件\SPH</Filter>
     </ClInclude>
     <ClInclude Include="SPH_System.h">
-      <Filter>源文件</Filter>
+      <Filter>源文件\SPH</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>源文件\SPH</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.h">
+      <Filter>源文件\SPH</Filter>
+    </ClInclude>
+    <ClInclude Include="SPH_MarchingCube.h">
+      <Filter>源文件\SPH</Filter>
+    </ClInclude>
+    <ClInclude Include="SPH_Math.h">
+      <Filter>源文件\SPH</Filter>
+    </ClInclude>
+    <ClInclude Include="SPH_UI.h">
+      <Filter>源文件\SPH</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Texture.fx">
-      <Filter>源文件</Filter>
+      <Filter>源文件\D3D11Render</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

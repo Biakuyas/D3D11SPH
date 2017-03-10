@@ -9,6 +9,7 @@
 #include<d3dx11effect.h>
 #include<D3DX11async.h>
 #include<xnamath.h>
+#include "SPH_UI.h"
 
 #define WINDOW_TITLE L"D3D11 Program"
 #define WINDOW_NAME L"All for Loli"

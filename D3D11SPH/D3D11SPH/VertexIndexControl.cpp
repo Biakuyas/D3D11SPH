@@ -1,11 +1,26 @@
 #include"VertexIndexControl.h"
 
 
-ID3D11Buffer * VertexIndexControl::m_VBSkull = 0;
+//ID3D11Buffer * VertexIndexControl::m_VBSkull = 0;
 
 ID3D11Buffer * VertexIndexControl::m_VB = 0;
 
-ID3D11Buffer * VertexIndexControl::m_IB = 0;
+ID3D11Buffer * VertexIndexControl::m_IBLimitedBox = 0;
+
+ID3D11Buffer * VertexIndexControl::m_VBLimitedBox = 0;
+
+ID3D11Buffer * VertexIndexControl::m_IBBarrier = 0;
+
+ID3D11Buffer * VertexIndexControl::m_VBBarrier = 0;
+
+ID3D11Buffer * VertexIndexControl::m_IBSkyBox = 0;
+
+ID3D11Buffer * VertexIndexControl::m_VBSkyBox = 0;
+
+ID3D11Buffer * VertexIndexControl::m_VBTestBox = 0;
+//ID3D11Buffer * VertexIndexControl::m_VBox = 0;
+
+//ID3D11Buffer * VertexIndexControl::m_IB = 0;
 
 UINT VertexIndexControl::m_iIndexCount = 0;
 
@@ -14,78 +29,157 @@ ID3D11InputLayout* VertexIndexControl::m_InputLayout = 0;
 
 void VertexIndexControl::VertexIndexInit(ID3D11Device * pd3dDevice)
 {
-	Vertex v[Particle_number]; 
-    for(int i = 0; i < Particle_number; i++)
-	{
-		v[i] = Vertex(0, 0, 0, 0.0f, 0.0f);
-	}
-	/*Vertex v[Particle_number];
-	for(int i = 0; i < Particle_number / 100 ; i++)
-		for(int j = 0; j < 10; j++)
-			for(int p = 0; p < 10; p++)
-			{
-				int cc =  i * 100 + j * 10 + p;
-				v[cc] = Vertex(p, i, j, 0.0f, 0.0f);
-			}*/
-	/*// Fill in the front face vertex data.
-	// Floor: Observe we tile texture coordinates.
-	v[0] = Vertex(-3.5f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 4.0f);
-	v[1] = Vertex(-3.5f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-	v[2] = Vertex( 7.5f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f, 4.0f, 0.0f);
 
-	v[3] = Vertex(-3.5f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 4.0f);
-	v[4] = Vertex( 7.5f, 0.0f,   0.0f, 0.0f, 1.0f, 0.0f, 4.0f, 0.0f);
-	v[5] = Vertex( 7.5f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 4.0f, 4.0f);
-
-	// Wall: Observe we tile texture coordinates, and that we
-	// leave a gap in the middle for the mirror.
-	v[6]  = Vertex(-3.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 2.0f);
-	v[7]  = Vertex(-3.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[8]  = Vertex(-2.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.5f, 0.0f);
-
-	v[9]  = Vertex(-3.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 2.0f);
-	v[10] = Vertex(-2.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.5f, 0.0f);
-	v[11] = Vertex(-2.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.5f, 2.0f);
-
-	v[12] = Vertex(2.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 2.0f);
-	v[13] = Vertex(2.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[14] = Vertex(7.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 2.0f, 0.0f);
-
-	v[15] = Vertex(2.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 2.0f);
-	v[16] = Vertex(7.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 2.0f, 0.0f);
-	v[17] = Vertex(7.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 2.0f, 2.0f);
-
-	v[18] = Vertex(-3.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[19] = Vertex(-3.5f, 6.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[20] = Vertex( 7.5f, 6.0f, 0.0f, 0.0f, 0.0f, -1.0f, 6.0f, 0.0f);
-
-	v[21] = Vertex(-3.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[22] = Vertex( 7.5f, 6.0f, 0.0f, 0.0f, 0.0f, -1.0f, 6.0f, 0.0f);
-	v[23] = Vertex( 7.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 6.0f, 1.0f);
-
-	// Mirror
-	v[24] = Vertex(-2.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[25] = Vertex(-2.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[26] = Vertex( 2.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
-
-	v[27] = Vertex(-2.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[28] = Vertex( 2.5f, 4.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
-	v[29] = Vertex( 2.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);*/
-
+	XMFLOAT2 Size(0.75,0.75);
+	Vertex v;
+	v = Vertex(0, 0, 0,0,0,0,0,0, Size.x,Size.y);
+//     for(int i = 0; i < Particle_number; i++)
+// 	{
+// 		v[i] = Vertex(0, 0, 0, 0,0, Size.x,Size.y);
+// 	}
 
 	D3D11_BUFFER_DESC mVertexBufferDesc;
 	mVertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	mVertexBufferDesc.MiscFlags = 0;
 	mVertexBufferDesc.CPUAccessFlags = 0;
 	mVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	mVertexBufferDesc.ByteWidth = sizeof(Vertex) * Particle_number;
+	mVertexBufferDesc.ByteWidth = sizeof(Vertex);
 	mVertexBufferDesc.StructureByteStride = 0;
 
 
 	D3D11_SUBRESOURCE_DATA mVertexSubReData;
-	mVertexSubReData.pSysMem = v;
+	mVertexSubReData.pSysMem = &v;
 
 	pd3dDevice->CreateBuffer(&mVertexBufferDesc,&mVertexSubReData,&m_VB);
+
+	
+	float length = SkyBoxRange ;
+
+
+	Vertex vBox[8] = {
+		Vertex(-length, -length , -length,0,0,0,0,0,0,0),
+		Vertex(-length, +length , -length,0,0,0,0,0,0,0),
+		Vertex(+length, +length , -length,0,0,0,0,0,0,0),
+		Vertex(+length, -length , -length,0,0,0,0,0,0,0),
+		Vertex(-length,  -length, +length,0,0,0,0,0,0,0),
+		Vertex(-length,  +length, +length,0,0,0,0,0,0,0),
+		Vertex(+length,  +length, +length,0,0,0,0,0,0,0),
+		Vertex(+length,  -length, +length,0,0,0,0,0,0,0),
+	};  
+
+	D3D11_BUFFER_DESC mVertexBoxBufferDesc;
+	mVertexBoxBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	mVertexBoxBufferDesc.MiscFlags = 0;
+	mVertexBoxBufferDesc.CPUAccessFlags = 0;
+	mVertexBoxBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	mVertexBoxBufferDesc.ByteWidth = sizeof(Vertex) * 8;
+	mVertexBoxBufferDesc.StructureByteStride = 0;
+
+
+	D3D11_SUBRESOURCE_DATA mVertexBoxSubReData;
+	mVertexBoxSubReData.pSysMem = vBox;
+
+	pd3dDevice->CreateBuffer(&mVertexBoxBufferDesc,&mVertexBoxSubReData,&m_VBSkyBox);
+
+	length = 10 ;
+	float dheight = 30;
+
+	Vertex vTestBox[8] = {
+		Vertex(-length, -length + dheight , -length,-1,-1,-1,0,0,0,0),
+		Vertex(-length, +length + dheight, -length,-1,+1,-1,0,0,0,0),
+		Vertex(+length, +length + dheight, -length,+1,+1,-1,0,0,0,0),
+		Vertex(+length, -length + dheight, -length,+1,-1,-1,0,0,0,0),
+		Vertex(-length,  -length + dheight, +length,-1,-1,+1,0,0,0,0),
+		Vertex(-length,  +length + dheight, +length,-1,+1,+1,0,0,0,0),
+		Vertex(+length,  +length + dheight, +length,+1,+1,+1,0,0,0,0),
+		Vertex(+length,  -length + dheight, +length,+1,-1,+1,0,0,0,0),
+	};  
+
+	D3D11_BUFFER_DESC mVertexTestBoxBufferDesc;
+	mVertexTestBoxBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	mVertexTestBoxBufferDesc.MiscFlags = 0;
+	mVertexTestBoxBufferDesc.CPUAccessFlags = 0;
+	mVertexTestBoxBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	mVertexTestBoxBufferDesc.ByteWidth = sizeof(Vertex) * 8;
+	mVertexTestBoxBufferDesc.StructureByteStride = 0;
+
+
+	D3D11_SUBRESOURCE_DATA mVertexTestBoxSubReData;
+	mVertexTestBoxSubReData.pSysMem = vTestBox;
+
+	pd3dDevice->CreateBuffer(&mVertexTestBoxBufferDesc,&mVertexTestBoxSubReData,&m_VBTestBox);
+
+	//Index
+	UINT Indics[] = {
+
+		// front face
+		0, 1, 2,
+		0, 2, 3,
+
+		// back face
+		4, 6, 5,
+		4, 7, 6,
+
+		// left face
+		4, 5, 1,
+		4, 1, 0,
+
+		// right face
+		3, 2, 6,
+		3, 6, 7,
+
+		// top face
+		1, 5, 6,
+		1, 6, 2,
+
+		// bottom face
+		4, 0, 3, 
+		4, 3, 7
+
+	};
+	// 
+	m_iIndexCount = 36;
+
+	D3D11_BUFFER_DESC mIndexBufferDesc;
+	mIndexBufferDesc.Usage =  D3D11_USAGE_IMMUTABLE;
+	mIndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	mIndexBufferDesc.ByteWidth = sizeof(UINT) * m_iIndexCount;
+	mIndexBufferDesc.CPUAccessFlags = 0;
+	mIndexBufferDesc.MiscFlags = 0;
+	mIndexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA mIndexSubReData;
+	mIndexSubReData.pSysMem = &Indics[0];
+
+
+	pd3dDevice->CreateBuffer(&mIndexBufferDesc,&mIndexSubReData,&m_IBSkyBox);
+
+
+	/*float length = 1.25;
+	Vertex vBox[8] = {
+		Vertex(-length, -length, -length,0,0,0,0),
+		Vertex(-length, +length, -length,0,0,0,0),
+		Vertex(+length, +length, -length,0,0,0,0),
+		Vertex(+length, -length, -length,0,0,0,0),
+		Vertex(-length, -length, +length,0,0,0,0),
+		Vertex(-length, +length, +length,0,0,0,0),
+		Vertex(+length, +length, +length,0,0,0,0),
+		Vertex(+length, -length, +length,0,0,0,0),
+	};  
+
+	D3D11_BUFFER_DESC mVertexBoxBufferDesc;
+	mVertexBoxBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	mVertexBoxBufferDesc.MiscFlags = 0;
+	mVertexBoxBufferDesc.CPUAccessFlags = 0;
+	mVertexBoxBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	mVertexBoxBufferDesc.ByteWidth = sizeof(Vertex) * 8;
+	mVertexBoxBufferDesc.StructureByteStride = 0;
+
+
+	D3D11_SUBRESOURCE_DATA mVertexBoxSubReData;
+	mVertexBoxSubReData.pSysMem = vBox;
+
+	pd3dDevice->CreateBuffer(&mVertexBoxBufferDesc,&mVertexBoxSubReData,&m_VBox);*/
 
 
 
@@ -143,7 +237,36 @@ void VertexIndexControl::VertexIndexInit(ID3D11Device * pd3dDevice)
 	mVertexSubReData_Skull.pSysMem = &vertices[0];
 
 	pd3dDevice->CreateBuffer(&mVertexBufferDesc_Skull,&mVertexSubReData_Skull,&m_VBSkull);
-
+	*/
+		/*UINT Indics[] = {
+			 
+			 		// front face
+			 		0, 1, 2,
+		     		0, 2, 3,
+			 
+			 		// back face
+			 		4, 6, 5,
+			 		4, 7, 6,
+			 
+			 		// left face
+			 		4, 5, 1,
+			 		4, 1, 0,
+			 
+			 		// right face
+			 		3, 2, 6,
+			 		3, 6, 7,
+			 
+			 		// top face
+			 		1, 5, 6,
+			 		1, 6, 2,
+			// 
+			 		// bottom face
+			 		4, 0, 3, 
+			 		4, 3, 7
+			// 
+			 	};
+			// 
+			 	m_iIndexCount = 36;
 
 	D3D11_BUFFER_DESC mIndexBufferDesc;
 	mIndexBufferDesc.Usage =  D3D11_USAGE_IMMUTABLE;
@@ -154,17 +277,20 @@ void VertexIndexControl::VertexIndexInit(ID3D11Device * pd3dDevice)
 	mIndexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA mIndexSubReData;
-	mIndexSubReData.pSysMem = &indices[0];
+	mIndexSubReData.pSysMem = &Indics[0];
 
 
 	pd3dDevice->CreateBuffer(&mIndexBufferDesc,&mIndexSubReData,&m_IB);*/
+
+
+
 }
 
 void VertexIndexControl::Release()
 {
 	RELEASE_COM(m_VB);
-	RELEASE_COM(m_IB);
-	RELEASE_COM(m_VBSkull);
+	//RELEASE_COM(m_IB);
+	//RELEASE_COM(m_VBSkull);
 	RELEASE_COM(m_InputLayout);
 }
 
@@ -176,15 +302,17 @@ HRESULT VertexIndexControl::SetLayout(ID3D11Device * pd3dDevice)
 		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
 		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,24,D3D11_INPUT_PER_VERTEX_DATA,0},
 		{"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0},
+		{"SIZE",0,DXGI_FORMAT_R32G32_FLOAT,0,32,D3D11_INPUT_PER_VERTEX_DATA,0},
 
 
 	};
 
 	D3DX11_PASS_DESC passDesc;
 	FXControl::m_fxTech->GetPassByIndex(0)->GetDesc(&passDesc);
+	//FXControl::m_fxBillBoardTech->GetPassByIndex(0)->GetDesc(&passDesc);
 
 
-	HRESULT hr = pd3dDevice->CreateInputLayout(d3dInputDesc,3,passDesc.pIAInputSignature,passDesc.IAInputSignatureSize,&m_InputLayout);
+	HRESULT hr = pd3dDevice->CreateInputLayout(d3dInputDesc,4,passDesc.pIAInputSignature,passDesc.IAInputSignatureSize,&m_InputLayout);
 
 	if(FAILED(hr))
 	{
@@ -194,6 +322,143 @@ HRESULT VertexIndexControl::SetLayout(ID3D11Device * pd3dDevice)
 
 	return S_OK;
 }
+
+void VertexIndexControl::SPHWallInit(ID3D11Device * pd3dDevice,SPHSystem & sphsystem)
+{
+
+	float WallLength = sphsystem.WallLength();
+	float SPHUnitScale = sphsystem.UnitScale();
+
+	float length = (WallLength - WallThickness / 2.0f) / ( SPHUnitScale) ;
+
+
+	Vertex vBox[8] = {
+		Vertex(-length, WallThickness / (2.0f * SPHUnitScale) , -length,0,0,0,0,0,0,0),
+		Vertex(-length, WallThickness / (2.0f * SPHUnitScale) , +length,0,0,0,0,0,0,0),
+		Vertex(+length, WallThickness / (2.0f * SPHUnitScale) , +length,0,0,0,0,0,0,0),
+		Vertex(+length, WallThickness / (2.0f * SPHUnitScale) , -length,0,0,0,0,0,0,0),
+		Vertex(-length, 2 * length, -length,0,0,0,0,0,0,0),
+		Vertex(-length, 2 * length, +length,0,0,0,0,0,0,0),
+		Vertex(+length, 2 * length, +length,0,0,0,0,0,0,0),
+		Vertex(+length, 2 * length, -length,0,0,0,0,0,0,0),
+	};  
+
+	D3D11_BUFFER_DESC mVertexBoxBufferDesc;
+	mVertexBoxBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	mVertexBoxBufferDesc.MiscFlags = 0;
+	mVertexBoxBufferDesc.CPUAccessFlags = 0;
+	mVertexBoxBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	mVertexBoxBufferDesc.ByteWidth = sizeof(Vertex) * 8;
+	mVertexBoxBufferDesc.StructureByteStride = 0;
+
+
+	D3D11_SUBRESOURCE_DATA mVertexBoxSubReData;
+	mVertexBoxSubReData.pSysMem = vBox;
+
+	pd3dDevice->CreateBuffer(&mVertexBoxBufferDesc,&mVertexBoxSubReData,&m_VBLimitedBox);
+
+	UINT Indics[] = {
+		0, 1,
+		1, 2,
+		2, 3,
+		3, 0,
+		4, 5,
+		5, 6,
+		6, 7,
+		7, 4,
+		0, 4,
+		1, 5,
+		2, 6,
+		3, 7,
+
+	};
+	// 
+	m_iIndexCount = 24;
+
+	D3D11_BUFFER_DESC mIndexBufferDesc;
+	mIndexBufferDesc.Usage =  D3D11_USAGE_IMMUTABLE;
+	mIndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	mIndexBufferDesc.ByteWidth = sizeof(UINT) * m_iIndexCount;
+	mIndexBufferDesc.CPUAccessFlags = 0;
+	mIndexBufferDesc.MiscFlags = 0;
+	mIndexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA mIndexSubReData;
+	mIndexSubReData.pSysMem = &Indics[0];
+
+
+	pd3dDevice->CreateBuffer(&mIndexBufferDesc,&mIndexSubReData,&m_IBLimitedBox);
+
+
+	float length_barrier = (WallLength - WallThickness * 1.5f ) / ( 3 * SPHUnitScale) ;
+
+
+	Vertex vBox_barrier[8] = {
+		Vertex(-length_barrier, WallThickness / (2.0f * SPHUnitScale) , -length_barrier,0,0,0,0,0,0,0),
+		Vertex(-length_barrier, WallThickness / (2.0f * SPHUnitScale) , +length_barrier,0,0,0,0,0,0,0),
+		Vertex(+length_barrier, WallThickness / (2.0f * SPHUnitScale) , +length_barrier,0,0,0,0,0,0,0),
+		Vertex(+length_barrier, WallThickness / (2.0f * SPHUnitScale) , -length_barrier,0,0,0,0,0,0,0),
+		Vertex(-length_barrier,  length_barrier, -length_barrier,0,0,0,0,0,0,0),
+		Vertex(-length_barrier,  length_barrier, +length_barrier,0,0,0,0,0,0,0),
+		Vertex(+length_barrier,  length_barrier, +length_barrier,0,0,0,0,0,0,0),
+		Vertex(+length_barrier,  length_barrier, -length_barrier,0,0,0,0,0,0,0),
+	};  
+
+	D3D11_BUFFER_DESC mVertexBarrierBufferDesc;
+	mVertexBarrierBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	mVertexBarrierBufferDesc.MiscFlags = 0;
+	mVertexBarrierBufferDesc.CPUAccessFlags = 0;
+	mVertexBarrierBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	mVertexBarrierBufferDesc.ByteWidth = sizeof(Vertex) * 8;
+	mVertexBarrierBufferDesc.StructureByteStride = 0;
+
+
+	D3D11_SUBRESOURCE_DATA mVertexBarrierSubReData;
+	mVertexBarrierSubReData.pSysMem = vBox_barrier;
+
+	pd3dDevice->CreateBuffer(&mVertexBarrierBufferDesc,&mVertexBarrierSubReData,&m_VBBarrier);
+
+	UINT Indics_barrier[] = {
+		0, 1,
+		1, 2,
+		2, 3,
+		3, 0,
+		4, 5,
+		5, 6,
+		6, 7,
+		7, 4,
+		0, 4,
+		1, 5,
+		2, 6,
+		3, 7,
+
+	};
+	// 
+	m_iIndexCount = 24;
+
+	D3D11_BUFFER_DESC mIndexBarrierBufferDesc;
+	mIndexBarrierBufferDesc.Usage =  D3D11_USAGE_IMMUTABLE;
+	mIndexBarrierBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	mIndexBarrierBufferDesc.ByteWidth = sizeof(UINT) * m_iIndexCount;
+	mIndexBarrierBufferDesc.CPUAccessFlags = 0;
+	mIndexBarrierBufferDesc.MiscFlags = 0;
+	mIndexBarrierBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA mIndexBarrierSubReData;
+	mIndexBarrierSubReData.pSysMem = &Indics_barrier[0];
+
+
+	pd3dDevice->CreateBuffer(&mIndexBarrierBufferDesc,&mIndexBarrierSubReData,&m_IBBarrier);
+
+}
+
+
+
+
+
+
+
+
 
 
 

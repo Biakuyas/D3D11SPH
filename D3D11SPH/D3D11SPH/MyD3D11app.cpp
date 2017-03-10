@@ -49,23 +49,64 @@ LRESULT MyD3D11app::WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 	float fMousePointx,fMousePointy;
 	switch(message)
 	{
-	case WM_KEYDOWN:
-		KeyDown(wParam);
-		break;
 	case WM_LBUTTONDOWN:
-	case WM_MBUTTONDOWN:
+		fMousePointx = GET_X_LPARAM(lParam);
+		fMousePointy = GET_Y_LPARAM(lParam);
+		MouseButtonDown(wParam,fMousePointx,fMousePointy);
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton); 
+		break;
+	case WM_LBUTTONUP: 
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton); 
+		break; 
+
 	case WM_RBUTTONDOWN:
 		fMousePointx = GET_X_LPARAM(lParam);
 		fMousePointy = GET_Y_LPARAM(lParam);
 		MouseButtonDown(wParam,fMousePointx,fMousePointy);
-
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::RightButton); 
 		break;
+	case WM_RBUTTONUP: 
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::RightButton); 
+		break;
+
+	case WM_MBUTTONDOWN: 
+		fMousePointx = GET_X_LPARAM(lParam);
+		fMousePointy = GET_Y_LPARAM(lParam);
+		MouseButtonDown(wParam,fMousePointx,fMousePointy);
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MiddleButton); 
+		break; 
+
+	case WM_MBUTTONUP: 
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MiddleButton); 
+		break; 
 	case WM_MOUSEMOVE:
+
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition((float)(LOWORD(lParam)), 
+			(float)(HIWORD(lParam)));
 
 		fMousePointx= GET_X_LPARAM(lParam);
 		fMousePointy = GET_Y_LPARAM(lParam);
-		MouseMove(wParam,fMousePointx,fMousePointy);
+		MouseMove(wParam,fMousePointx,fMousePointy); 
+
+		
 		break;
+
+	case WM_MOUSEWHEEL: 
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseWheelChange(((short)HIWORD(wParam)) / (120.0));
+		break;
+
+
+	case WM_KEYDOWN:
+		KeyDown(wParam);
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::Scan(SPH_UIControl::virtualkey2scancode(wParam,lParam)));
+		break;
+	case WM_KEYUP:
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(CEGUI::Key::Scan(SPH_UIControl::virtualkey2scancode(wParam,lParam)));
+		break;
+	case WM_CHAR:
+		CEGUI::System::getSingleton().getDefaultGUIContext().injectChar( static_cast<CEGUI::utf32>(wParam) );
+		break;
+
 
 	case WM_SIZE:
 		if(m_pd3dDevice)
@@ -374,8 +415,8 @@ MyD3D11app::MyD3D11app()
 	m_pRenderTargetView = NULL;
 	m_pDepthStencilView = NULL;
 
-	m_fWindow_Width = 800;
-	m_fwindow_Height = 600;
+	m_fWindow_Width = 1280;
+	m_fwindow_Height = 720;
 
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_iLastCount);
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_iNowCount);;
